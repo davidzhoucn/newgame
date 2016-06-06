@@ -14,7 +14,7 @@ function MenuScene:ctor()
     self:addChild(self.adBar)
 
     self.moreGamesButton = BubbleButton.new({
-            image = "#MenuSceneMoreGamesButton.png",
+            image = "MenuSceneMoreGamesButton.png",
             sound = GAME_SFX.tapButton,
             prepare = function()
                 audio.playSound(GAME_SFX.tapButton)
@@ -28,7 +28,7 @@ function MenuScene:ctor()
         :addTo(self)
 
     self.startButton = BubbleButton.new({
-            image = "#MenuSceneStartButton.png",
+            image = "start.png",
             sound = GAME_SFX.tapButton,
             prepare = function()
                 audio.playSound(GAME_SFX.tapButton)

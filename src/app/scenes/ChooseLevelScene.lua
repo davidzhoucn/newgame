@@ -7,12 +7,12 @@ local ChooseLevelScene = class("ChooseLevelScene", function()
 end)
 
 function ChooseLevelScene:ctor()
-    local bg = display.newSprite("#OtherSceneBg.png")
+    local bg = display.newSprite("OtherSceneBg.jpeg")
     -- make background sprite always align top
     bg:setPosition(display.cx, display.top - bg:getContentSize().height / 2)
     self:addChild(bg)
 
-    local title = display.newSprite("#Title.png", display.cx, display.top - 100)
+    local title = display.newSprite("title.png", display.cx, display.top - 100)
     self:addChild(title)
 
     local adBar = AdBar.new()

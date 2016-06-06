@@ -6,7 +6,7 @@ local MoreGamesScene = class("MoreGamesScene", function()
 end)
 
 function MoreGamesScene:ctor()
-    self.bg = display.newSprite("#MenuSceneBg.png", display.cx, display.cy)
+    self.bg = display.newSprite("menuscencebg.jpg", display.cx, display.cy)
     self:addChild(self.bg)
 
     self.adBar = AdBar.new()

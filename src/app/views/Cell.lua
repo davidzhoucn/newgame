@@ -6,7 +6,7 @@ local Coin = class("Coin", function(nodeType)
     -- if nodeType == Levels.NODE_IS_BLACK then
     --     index = 8
     -- end
-    local sprite = display.newSprite(string.format("#Coin%04d.png", index))
+    local sprite = display.newSprite(string.format("cell8.png", index))
     sprite.isWhite = index == 1
     return sprite
 end)
