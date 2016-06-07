@@ -1,15 +1,36 @@
 
 local Levels = import("..data.myLevels")
 
+local ourCellsName =
+{
+    {"#monster1.png"},
+    {"#monster2.png"},
+    {"#monster3.png"},
+    {"#monster4.png"},
+    {"#monster5.png"},
+    {"#monster6.png"},
+    {"#monster7.png"},
+    {"#monster8.png"},
+
+
+}
 local Cell = class("Cell", function(nodeType)
-    local index = 1
-    if nodeType == Levels.NODE_IS_BLACK then
-        index = 8
+    local index 
+    if nodeType then
+        index =nodeType
+    else
+    index= math.floor(math.random(#ourCellsName))
     end
-    local sprite = display.newSprite(string.format("monster%d.png", index))
-    sprite.isWhite = index == 1
+    -- if nodeType == Levels.NODE_IS_BLACK then
+    --     index = 8
+    -- end
+    -- local sprite = display.newSprite(string.format("#monster%d.png", index))
+    -- sprite.isWhite = index == 1
+    local sprite =display.newSprite(ourCellsName[index][1])
+    sprite.nodeType =index
     return sprite
 end)
+
 
 function Cell:flip(onComplete)
     local frames = display.newFrames("Cell%04d.png", 1, 8, not self.isWhite)
