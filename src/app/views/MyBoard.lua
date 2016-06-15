@@ -12,8 +12,8 @@ end)
 local NODE_PADDING   = 100 * GAME_CELL_STAND_SCALE
 local NODE_ZORDER    = 0
 local SWAP_TIME = 0.6
+local CELL_SCALE = 0.65
 local CELL_ZORDER    = 1000
-local COIN_ZORDER    = 1000
 local isInTouch = false
 local isEnableTouch = true 
 
@@ -65,7 +65,7 @@ function Board:ctor(levelData)
                     cell.col = col
                     self.grid[row][col] = cell
                     self.cells[#self.cells + 1] = cell
-                    self.batch:addChild(cell, COIN_ZORDER)
+                    self.batch:addChild(cell, CELL_ZORDER)
                    
                 end
             end
@@ -94,7 +94,7 @@ function Board:ctor(levelData)
                     cell.col = col
                     self.grid[row][col] = cell
                     self.cells[#self.cells + 1] = cell
-                    self.batch:addChild(cell, COIN_ZORDER)
+                    self.batch:addChild(cell, CELL_ZORDER)
                     
                 -- end
             end
@@ -378,7 +378,7 @@ function Board:changeSingedCell(onAnimationComplete)
             end
             
             self.cells[i] = cell
-            self.batch:addChild(cell, COIN_ZORDER)
+            self.batch:addChild(cell, CELL_ZORDER)
         end
     end
 
@@ -433,7 +433,7 @@ function Board:changeSingedCell(onAnimationComplete)
             end
         end
     else
-        --
+        
     end
 end
 
@@ -589,14 +589,14 @@ function Board:flipCoin(cell, includeNeighbour)
     self.flipAnimationCount = self.flipAnimationCount + 1
     cell:flip(function()
         self.flipAnimationCount = self.flipAnimationCount - 1
-        self.batch:reorderChild(cell, COIN_ZORDER)
+        self.batch:reorderChild(cell, CELL_ZORDER)
         if self.flipAnimationCount == 0 then
             self:checkLevelCompleted()
         end
     end)
     if includeNeighbour then
         audio.playSound(GAME_SFX.flipCoin)
-        self.batch:reorderChild(cell, COIN_ZORDER + 1)
+        self.batch:reorderChild(cell, CELL_ZORDER + 1)
         self:performWithDelay(function()
             self:flipCoin(self:getCoin(cell.row - 1, coin.col))
             self:flipCoin(self:getCoin(cell.row + 1, coin.col))
@@ -644,6 +644,7 @@ function Board:onTouch(event, x, y)
         end
         isInTouch = true
         self.grid[curSwapBeginRow][curSwapBeginCol]:setLocalZOrder(CELL_ZORDER+1)
+        self.grid[curSwapBeginRow][curSwapBeginCol]:runAction(cc.ScaleTo:create(SWAP_TIME/2,1.0))
         return true
     end
     if isInTouch and (event == "moved" or event == "ended"  )then
@@ -671,8 +672,10 @@ function Board:onTouch(event, x, y)
                           isEnableTouch = true
                     end)
                 }))
-            cell_center:runAction(cc.ScaleTo:create(SWAP_TIME/2,CELL_SCALE))
+            -- cell_center:runAction(cc.ScaleTo:create(SWAP_TIME/2,CELL_SCALE))
             self.grid[curSwapBeginRow][curSwapBeginCol]:setLocalZOrder(CELL_ZORDER)
+            self.grid[curSwapBeginRow][curSwapBeginCol]:runAction(cc.ScaleTo:create(SWAP_TIME/2,0.65))
+ 
         end
         if event == "ended" then
             AnchBack()
@@ -697,7 +700,8 @@ function Board:onTouch(event, x, y)
                 if curSwapBeginRow - row > 1 then row = curSwapBeginRow - 1 end
                 if col -  curSwapBeginCol > 1 then col = curSwapBeginCol + 1 end
                 if curSwapBeginCol - col  > 1 then col = curSwapBeginCol - 1 end
-                    self:swap(row,col,curSwapBeginRow,curSwapBeginCol,function()
+                isEnableTouch = false
+                    self:swap(row,col,curSwapBeginRow,curSwapBeginCol,true,function()
                         -- if START_TAG then
                         --     step = step + 1
                         --     GAME_STEP = GAME_STEP + 1
@@ -705,10 +709,14 @@ function Board:onTouch(event, x, y)
                         self:checkCell(self.grid[row][col])
                         self:checkCell(self.grid[curSwapBeginRow][curSwapBeginCol])
                         if self:checkNotClean() then
-                            WAIT_TIME = 0
-                            self:changeSingedCell(true)
+                            isEnableTouch = true
+                            -- WAIT_TIME = 0
+                            -- self:changeSingedCell(true)
+                            
+
                         else
-                            self:swap(row,col,curSwapBeginRow,curSwapBeginCol,function()
+                            isEnableTouch = false
+                            self:swap(row,col,curSwapBeginRow,curSwapBeginCol,true,function()
                                 isEnableTouch = true
                             end,0.5)
                         end
